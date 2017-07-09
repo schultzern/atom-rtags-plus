@@ -91,6 +91,10 @@ module.exports = AtomRtags =
 
       # Register commands
       @subscriptions.push atom.commands.add 'atom-workspace', 'atom-rtags-plus:find-symbol-at-point': => @findSymbolAtPoint()
+      @subscriptions.push atom.commands.add 'atom-workspace', 'atom-rtags-plus:find-symbol-at-point-split-right': => @findSymbolAtPoint("right")
+      @subscriptions.push atom.commands.add 'atom-workspace', 'atom-rtags-plus:find-symbol-at-point-split-left': => @findSymbolAtPoint("left")
+      @subscriptions.push atom.commands.add 'atom-workspace', 'atom-rtags-plus:find-symbol-at-point-split-down': => @findSymbolAtPoint("down")
+      @subscriptions.push atom.commands.add 'atom-workspace', 'atom-rtags-plus:find-symbol-at-point-split-up': => @findSymbolAtPoint("up")
       @subscriptions.push atom.commands.add 'atom-workspace', 'atom-rtags-plus:find-references-at-point': => @findReferencesAtPoint()
       @subscriptions.push atom.commands.add 'atom-workspace', 'atom-rtags-plus:find-all-references-at-point': => @findAllReferencesAtPoint()
       @subscriptions.push atom.commands.add 'atom-workspace', 'atom-rtags-plus:find-virtuals-at-point': => @findVirtualsAtPoint()
@@ -134,13 +138,22 @@ module.exports = AtomRtags =
     @hyperclickProvider.getProvider()
 
 
-  findSymbolAtPoint: ->
+  findSymbolAtPoint: (split) ->
     active_editor = atom.workspace.getActiveTextEditor()
     return if not active_editor
     return if not n_util.matched_scope(active_editor)
     @rcExecutor.find_symbol_at_point(active_editor.getPath(), active_editor.getCursorBufferPosition()).then(([uri,r,c]) ->
       if !uri
         return
+      # Add split options
+      if split is "right"
+        atom.workspace.getActivePane().splitRight()
+      if split is "left"
+        atom.workspace.getActivePane().splitLeft()
+      if split is "down"
+        atom.workspace.getActivePane().splitDown()
+      if split is "up"
+        atom.workspace.getActivePane().splitUp()
       atom.workspace.open uri, {'initialLine': r, 'initialColumn':c})
     .catch( (error) -> atom.notifications.addError(error))
 
