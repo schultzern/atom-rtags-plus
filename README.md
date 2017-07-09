@@ -15,3 +15,8 @@ Uses [rtags](https://github.com/Andersbakken/rtags) to provide common IDE usage 
 * And maybe more!
 
 [See the github page for demos](https://sphaerophoria.github.io/atom-rtags-plus)
+
+## TODO
+* ~~Implement split options for function _find-symbol-at-point_~~
+* List available projects and outline current 
+* Handle for projects which are not indexed
