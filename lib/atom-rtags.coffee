@@ -142,18 +142,21 @@ module.exports = AtomRtags =
     active_editor = atom.workspace.getActiveTextEditor()
     return if not active_editor
     return if not n_util.matched_scope(active_editor)
+    # Get active pane item and pane for splitting options.
+    active_pane = atom.workspace.getActivePane()
+    active_pane_item = atom.workspace.getActivePaneItem()
     @rcExecutor.find_symbol_at_point(active_editor.getPath(), active_editor.getCursorBufferPosition()).then(([uri,r,c]) ->
       if !uri
         return
       # Add split options
       if split is "right"
-        atom.workspace.getActivePane().splitRight()
+        active_pane.splitRight([active_pane_item, true])
       if split is "left"
-        atom.workspace.getActivePane().splitLeft()
+        active_pane.splitLeft([active_pane_item, true])
       if split is "down"
-        atom.workspace.getActivePane().splitDown()
+        active_pane.splitDown([active_pane_item, true])
       if split is "up"
-        atom.workspace.getActivePane().splitUp()
+        active_pane.splitUp([active_pane_item, true])
       atom.workspace.open uri, {'initialLine': r, 'initialColumn':c})
     .catch( (error) -> atom.notifications.addError(error))
 
